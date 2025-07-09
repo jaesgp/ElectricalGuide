@@ -1,22 +1,29 @@
 // assets/js/main.js
 
+// Debug: ensure this file is loading
+console.log('main.js loaded');
+
 // 1) Load and parse your CSV
 Papa.parse('/data/components.csv', {
   download: true,
   header: true,
   skipEmptyLines: true,
   complete: results => {
-    // Normalize fields into a JS-friendly format
+    // Normalize fields into a JS‐friendly format
     const components = results.data.map(row => ({
-      id:              row['Component ID'],
-      name:            row['Component'],
-      module:          row['Module'],
-      plc:             row['PLC Address'],
-      area:            row['Area'],
-      cableId:         row['Cable ID'],
-      carriageWiring:  row['Carriage Terminal Wiring'],
-      cabinetWiring:   row['To Cabinet']
+      id:             row['Component ID'],
+      name:           row['Component'],
+      module:         row['Module'],
+      plc:            row['PLC Address'],
+      area:           row['Area'],
+      cableId:        row['Cable ID'],
+      carriageWiring: row['Carriage Terminal Wiring'],
+      cabinetWiring:  row['To Cabinet']
     }));
+
+    // Debug: log parsed data
+    console.log('Parsed components:', components);
+
     renderComponents(components);
   }
 });
@@ -62,4 +69,23 @@ function renderComponents(components) {
 // 3) Show details in modal
 function showDetails(c) {
   document.getElementById('component-id').textContent     = `${c.id} – ${c.name}`;
-  document.getEle
+  document.getElementById('area').textContent             = `Area: ${c.area}`;
+  document.getElementById('cable-id').textContent         = `Cable ID: ${c.cableId}`;
+  document.getElementById('cabinet-wiring').textContent   = `To Cabinet: ${c.cabinetWiring}`;
+
+  const ul = document.getElementById('wiring-list');
+  ul.innerHTML = '';
+  c.carriageWiring.split('/').forEach(pair => {
+    const [term, signal] = pair.split(':');
+    const li = document.createElement('li');
+    li.textContent = `${term}: ${signal}`;
+    ul.appendChild(li);
+  });
+
+  document.getElementById('details-modal').classList.remove('hidden');
+}
+
+// 4) Hide the modal
+function hideDetails() {
+  document.getElementById('details-modal').classList.add('hidden');
+}
