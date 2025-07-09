@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Component Reference</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Load component data externally if desired -->
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="container mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Component Reference</h1>
+
+    <!-- Component List by Area -->
+    <div id="component-list">
+      <!-- Filled by JavaScript -->
+    </div>
+
+    <!-- Details Modal -->
+    <div id="details-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+      <div class="bg-white rounded-lg shadow-lg p-6 w-96 relative">
+        <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="hideDetails()">&times;</button>
+        <div id="details-content" class="mt-4">
+          <h2 id="component-id" class="text-2xl font-bold"></h2>
+          <p id="area" class="text-md text-gray-700 mt-2"></p>
+          <p id="cable-id" class="text-md text-gray-700 mt-1"></p>
+          <p id="cabinet-wiring" class="text-md text-gray-700 mt-1"></p>
+          <h3 class="text-lg font-medium mt-4">Carriage Terminal Wiring</h3>
+          <ul id="wiring-list" class="list-disc list-inside mt-2"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Component data
+    const components = [
+      { id: 'SQ8.2', name: 'Infeed UCM Sensor', module: 'CPU 1212C', plc: 'I0.1', area: 'Carriage', cableId: '101', carriageWiring: 'BN:+/BU:-/BK:101', cabinetWiring: 'W19-1' },
+      { id: 'B8.5', name: 'Pallet Height Photocell', module: 'CPU 1212C', plc: 'I0.4', area: 'Carriage', cableId: '104', carriageWiring: 'BN:+/BU:-/BK:104/WH:Not Used', cabinetWiring: 'W19-2' },
+      { id: 'SQ8.8', name: 'Carriage Door Switch', module: 'CPU 1212C', plc: 'I0.7', area: 'Carriage', cableId: '107', carriageWiring: 'BN:+/BU:-/BK:107/GN:-/YE:Earth', cabinetWiring: 'W19-3' },
+      { id: 'SQ10.1', name: 'Crush pad/plate', module: 'SM 1221 DC', plc: 'I8.0', area: 'Carriage', cableId: '180', carriageWiring: 'BK:+/GY:180', cabinetWiring: 'W19-4' },
+      { id: 'B11.2', name: 'Load Cell Signal (Analogue)', module: 'CPU 1212C', plc: 'IW64', area: 'Carriage', cableId: 'S+ / S-', carriageWiring: 'RD:+/BK:-/GN:+/WH:-/SY:Earth', cabinetWiring: 'S+: W05-BN / S-: W05-WH' },
+      { id: 'SQ8.4', name: 'Zero Position Sensor', module: 'CPU 1212C', plc: 'I0.3', area: 'Turntable', cableId: '103', carriageWiring: 'BN:+/BU:-/BK:103', cabinetWiring: 'W12' }
+    ];
+
+    // Group by area and render
+    const listContainer = document.getElementById('component-list');
+    const areas = [...new Set(components.map(c => c.area))];
+    areas.forEach(area => {
+      // Section header
+      const section = document.createElement('div');
+      section.className = 'mb-8';
+      const header = document.createElement('h2');
+      header.textContent = area;
+      header.className = 'text-2xl font-semibold mb-4';
+      section.appendChild(header);
+
+      // Grid of cards
+      const grid = document.createElement('div');
+      grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
+      components
+        .filter(c => c.area === area)
+        .forEach(comp => {
+          const card = document.createElement('div');
+          card.className = 'bg-white p-4 rounded-lg shadow hover:shadow-lg cursor-pointer';
+          card.setAttribute('onclick', `showDetails('${comp.id}')`);
+          card.innerHTML = `
+            <h3 class='text-xl font-semibold'>${comp.name}</h3>
+            <p class='text-gray-600'>Module: ${comp.module}</p>
+            <p class='text-gray-600'>PLC Address: ${comp.plc}</p>
+            <p class='text-gray-600'>Cable ID: ${comp.cableId}</p>
+          `;
+          grid.appendChild(card);
+        });
+      section.appendChild(grid);
+      listContainer.appendChild(section);
+    });
+
+    // Show details
+    function showDetails(id) {
+      const comp = components.find(c => c.id === id);
+      document.getElementById('component-id').textContent = `${comp.id} – ${comp.name}`;
+      document.getElementById('area').textContent = `Area: ${comp.area}`;
+      document.getElementById('cable-id').textContent = `Cable ID: ${comp.cableId}`;
+      document.getElementById('cabinet-wiring').textContent = `To Cabinet: ${comp.cabinetWiring}`;
+      const wiringList = document.getElementById('wiring-list');
+      wiringList.innerHTML = '';
+      comp.carriageWiring.split('/').forEach(pair => {
+        const [term, signal] = pair.split(':');
+        const li = document.createElement('li');
+        li.textContent = `${term}: ${signal}`;
+        wiringList.appendChild(li);
+      });
+      document.getElementById('details-modal').classList.remove('hidden');
+    }
+
+    // Hide modal
+    function hideDetails() {
+      document.getElementById('details-modal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
