@@ -1,0 +1,19 @@
+Column1,Module,Component,PLC Address,Area,Component ID,Cable ID,Carriage Terminal Wiring,To Cabinet
+3,CPU 1212C,Zero Position Sensor,I0.3,Turntable,SQ8.4,103,BN:+/BU:-/BK:103,W12
+0,CPU 1212C,Program 5,I0.0,Mast,,100,,
+2,CPU 1212C,E-Stop,I0.2,Mast,,,,
+5,CPU 1212C,Program 1,I0.5,Mast,,,,
+6,CPU 1212C,Program 2,I0.6,Mast,,,,
+1,SM 1221 DC,Start,I8.1,Mast,,,,
+2,SM 1221 DC,Stop,I8.2,Mast,,,,
+3,SM 1221 DC,Reset,I8.3,Mast,,,,
+6,SM 1221 DC,Program 3,I8.6,Mast,,,,
+7,SM 1221 DC,Program 4,I8.7,Mast,,,,
+4,SM 1221 DC,Lower Carriage Limit Switch,I8.4,Mast,,,,
+5,SM 1221 DC,Upper Carriage Limit Switch,I8.5,Mast,,,,
+1,CPU 1212C,Infeed UCM Sensor,I0.1,Carriage,SQ8.2,101,BN:+/BU:-/BK:101,W19-1
+4,CPU 1212C,Pallet Height Photocell,I0.4,Carriage,B8.5,104,BN:+/BU:-/BK:104/WH:Not Used,W19-2
+7,CPU 1212C,Carriage Door Switch,I0.7,Carriage,SQ8.8,107,BN:+/BU:107/GN-YE:Earth,W19-3
+0,SM 1221 DC,Crush pad/plate,I8.0,Carriage,SQ.10.1,180,BK:+/GY:180,W19-4
+8,CPU 1212C,Load Cell Signal (Analogue),IW64,Carriage,B11.2,S+,RD:+/BK:-/GN:+S/WH:-S/YE:Earth,W0S-BN
+8.1,CPU 1212C,Load Cell Signal (Analogue),IW64,Carriage,B11.2,S-,RD:+/BK:-/GN:+S/WH:-S/YE:Earth,W0S-WH
